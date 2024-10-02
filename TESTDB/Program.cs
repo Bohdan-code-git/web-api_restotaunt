@@ -1,4 +1,5 @@
 using TESTDB.DATA;
+using TESTDB.Services.ItemServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<PostgreSqlContext>();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IItemservices, ItemServices>();
 
 var app = builder.Build();
 
