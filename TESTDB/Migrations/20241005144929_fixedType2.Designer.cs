@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TESTDB.DATA;
@@ -11,9 +12,11 @@ using TESTDB.DATA;
 namespace TESTDB.Migrations
 {
     [DbContext(typeof(PostgreSqlContext))]
-    partial class PostgreSqlContextModelSnapshot : ModelSnapshot
+    [Migration("20241005144929_fixedType2")]
+    partial class fixedType2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +36,7 @@ namespace TESTDB.Migrations
                     b.Property<DateTime>("CteatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("TypeId")
+                    b.Property<int?>("TypeId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -172,13 +175,11 @@ namespace TESTDB.Migrations
 
             modelBuilder.Entity("TESTDB.Models.Item", b =>
                 {
-                    b.HasOne("TESTDB.Models.Type", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("TESTDB.Models.Type", "type")
+                        .WithMany("items")
+                        .HasForeignKey("TypeId");
 
-                    b.Navigation("Type");
+                    b.Navigation("type");
                 });
 
             modelBuilder.Entity("TESTDB.Models.News", b =>
@@ -190,6 +191,11 @@ namespace TESTDB.Migrations
                         .IsRequired();
 
                     b.Navigation("type");
+                });
+
+            modelBuilder.Entity("TESTDB.Models.Type", b =>
+                {
+                    b.Navigation("items");
                 });
 #pragma warning restore 612, 618
         }

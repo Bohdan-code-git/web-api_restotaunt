@@ -16,8 +16,21 @@ namespace TESTDB.Services.ItemServices
 
         public async Task<List<Item?>> GetItems()
         {
-            var items = await postgreSqlContext.Items.ToListAsync();
+            var items = await postgreSqlContext.Items.Include(i => i.Type).ToListAsync();
             return items;
+        }
+         public async Task<List<Item?>> GetItemsByDishType(string name)
+        {
+            var items = await postgreSqlContext.Items.Include(i => i.Type).ToListAsync();
+            List<Item> result = new List<Item>();
+            foreach (var item in items)
+            {
+                if(item.Type.name == name)
+                {
+                    result.Add(item);
+                }
+            }
+            return result;
         }
     }
 }
