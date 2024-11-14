@@ -2,8 +2,12 @@ using TESTDB.DATA;
 using TESTDB.Services.ItemServices;
 using TESTDB.Services.NewsServices;
 using Microsoft.IdentityModel.Tokens;
+
 using System.Text;
 using Microsoft.OpenApi.Models;
+using TESTDB.Services.UserServices;
+using BCrypt.Net;
+using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<PostgreSqlContext>();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -23,17 +28,18 @@ builder.Services.AddSwaggerGen(options =>
 
     });
 });
-
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IItemservices, ItemServices>();
 builder.Services.AddScoped<INewsService, NewsService>();
-
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAuthentication().AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        
         ValidateIssuerSigningKey = true,
         ValidateAudience = false,
-        ValidateIssuer = false,
+        ValidateIssuer = false, 
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT:Token").Value!))
     };
 });

@@ -45,5 +45,6 @@ namespace TESTDB.DATA
         public DbSet<Type> Types { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<NewsType> NewsTypes { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

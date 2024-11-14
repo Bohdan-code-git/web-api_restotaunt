@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Services\OrderServices\" />
-    <Folder Include="Services\UserServices\" />
   </ItemGroup>
 
 </Project>

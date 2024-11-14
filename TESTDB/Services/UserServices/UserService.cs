@@ -1,0 +1,86 @@
+﻿using AutoMapper;
+using BCrypt.Net;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using TESTDB.DATA;
+using TESTDB.DTO;
+using TESTDB.Models;
+
+
+namespace TESTDB.Services.UserServices
+{
+    public class UserService : IUserService
+    {
+        private readonly PostgreSqlContext postgreSqlContext;
+        private readonly IMapper mapper;
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserService(
+            PostgreSqlContext postgreSqlContext,
+            IMapper mapper,
+            IConfiguration configuration,
+            IHttpContextAccessor httpContextAccessor
+            )
+        {
+            this.postgreSqlContext = postgreSqlContext;
+            this.mapper = mapper;
+            _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<string> Login(AddUserDto user)
+        {
+            var result = postgreSqlContext.Users.FirstOrDefault(u => u.Email == user.Email);
+            if (result == null)
+                throw new Exception("User's not found");
+
+            if (!BCrypt.Net.BCrypt.Verify(user.Password, result.Password))
+                throw new Exception("Wrong credentials");
+
+            string token = CreateToken(result);
+
+            return token;
+        }
+        public async Task<string> CreateUser(AddUserDto newUser)
+        {
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+            newUser.Password = passwordHash;
+
+            User user = mapper.Map<User>(newUser);
+
+            postgreSqlContext.Users.Add(user);
+            await postgreSqlContext.SaveChangesAsync();
+
+            string token = CreateToken(mapper.Map<User>(newUser));
+
+            return token;
+        }
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, "User")
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("JWT:Token").Value!));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(1),
+                    signingCredentials: creds
+                );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+        }
+
+    }
+}
