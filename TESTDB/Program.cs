@@ -8,9 +8,9 @@ using Microsoft.OpenApi.Models;
 using TESTDB.Services.UserServices;
 using BCrypt.Net;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -28,6 +28,17 @@ builder.Services.AddSwaggerGen(options =>
 
     });
 });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()  // Разрешить все источники
+              .AllowAnyMethod()  // Разрешить все HTTP методы
+              .AllowAnyHeader(); // Разрешить все заголовки
+    });
+});
+
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IItemservices, ItemServices>();
 builder.Services.AddScoped<INewsService, NewsService>();
@@ -54,9 +65,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-
-
+app.UseCors("AllowAll");
 app.UseAuthorization();
 
 app.MapControllers();
