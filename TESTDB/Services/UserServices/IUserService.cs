@@ -6,7 +6,7 @@ namespace TESTDB.Services.UserServices
     {
         Task<string> CreateUser(AddUserDto user);
         Task<string> Login(AddUserDto user);
-       // Task<GetUserDto> GetUserInfo();
-       //<GetUserDto?> GetUserDetails(int id);
+        Task<GetUserDto> GetUserInfo();
+        Task<GetUserDto?> GetUserDetails(int id);
     }
 }

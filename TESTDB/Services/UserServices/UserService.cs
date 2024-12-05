@@ -82,5 +82,32 @@ namespace TESTDB.Services.UserServices
             return jwt;
         }
 
+        public async Task<GetUserDto> GetUserInfo()
+        {
+            if (_httpContextAccessor.HttpContext is not null)
+            {
+                var result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+
+                var user = postgreSqlContext.Users.FirstOrDefault(u => u.Email == result);
+
+                if (user == null)
+                    return null;
+
+                return mapper.Map<GetUserDto>(user);
+            }
+            return null;
+        }
+
+        public async Task<GetUserDto?> GetUserDetails(int id)
+        {
+            var user = postgreSqlContext.Users.FirstOrDefault(u => u.Id == id);
+
+            if (user is null)
+                return null;
+
+            return mapper.Map<GetUserDto>(user);
+        }
+
+
     }
 }
