@@ -4,10 +4,10 @@ namespace TESTDB.Models
 {
     public class Item: BaseEntity
     {
-        public string name { get; set; }
-        public string description { get; set; }
-        public decimal price { get; set; }  
-        public string imageURL { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }  
+        public string ImageURL { get; set; }
         //public int? TypeId { get; set; }
         public virtual Type Type { get; set; }
     }

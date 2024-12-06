@@ -20,6 +20,7 @@ namespace TESTDB.Controllers
         {
             try
             {
+
                 var result = await _userService.CreateUser(newUser);
                 TokenDto tokenDto = new TokenDto();
                 tokenDto.Token = result;

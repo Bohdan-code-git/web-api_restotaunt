@@ -2,9 +2,9 @@
 {
     public class News :BaseEntity
     {
-        public string name { get; set; }
-        public string description { get; set; }
-        public string imageURL { get; set; }
-        public NewsType type { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string ImageURL { get; set; }
+        public NewsType Type { get; set; }
     }
 }

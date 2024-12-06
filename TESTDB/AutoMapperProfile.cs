@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using TESTDB.DTO;
 using TESTDB.Models;
+using WebApplication1.Dtos;
 
 
 namespace WebApplication1
@@ -11,6 +12,7 @@ namespace WebApplication1
         {
             CreateMap<AddUserDto, User>();
             CreateMap<User, GetUserDto>();
+            CreateMap<CreateOrderDto, Order>();
         }
     }
 }

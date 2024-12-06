@@ -25,7 +25,7 @@ namespace TESTDB.Services.ItemServices
             List<Item> result = new List<Item>();
             foreach (var item in items)
             {
-                if(item.Type.name == name)
+                if(item.Type.Name == name)
                 {
                     result.Add(item);
                 }

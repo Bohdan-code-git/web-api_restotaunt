@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TESTDB.DATA;
@@ -11,9 +12,11 @@ using TESTDB.DATA;
 namespace TESTDB.Migrations
 {
     [DbContext(typeof(PostgreSqlContext))]
-    partial class PostgreSqlContextModelSnapshot : ModelSnapshot
+    [Migration("20241206185512_fixednaming")]
+    partial class fixednaming
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,7 +153,7 @@ namespace TESTDB.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("TESTDB.Models.OrderItem", b =>
@@ -176,7 +179,7 @@ namespace TESTDB.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("TESTDB.Models.Status", b =>

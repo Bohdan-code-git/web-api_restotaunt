@@ -2,13 +2,13 @@ using TESTDB.DATA;
 using TESTDB.Services.ItemServices;
 using TESTDB.Services.NewsServices;
 using Microsoft.IdentityModel.Tokens;
-
 using System.Text;
 using Microsoft.OpenApi.Models;
 using TESTDB.Services.UserServices;
 using BCrypt.Net;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Builder;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -27,6 +27,7 @@ builder.Services.AddSwaggerGen(options =>
         Type = SecuritySchemeType.ApiKey
 
     });
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
 builder.Services.AddCors(options =>
@@ -38,11 +39,12 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader(); // Разрешить все заголовки
     });
 });
-
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 builder.Services.AddScoped<IItemservices, ItemServices>();
 builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddAuthentication().AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -66,6 +68,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+
 app.UseAuthorization();
 
 app.MapControllers();

@@ -4,10 +4,10 @@ namespace TESTDB.Models
 {
     public class Type : BaseEntity
     {
-        public string name { get; set; }
+        public string Name { get; set; }
 
         [NotMapped]
-        public List<Item> items { get; set; } = new();
+        public List<Item> Items { get; set; } = new();
 
     }
 }

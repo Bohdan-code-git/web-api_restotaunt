@@ -52,6 +52,11 @@ namespace TESTDB.Services.UserServices
 
             User user = mapper.Map<User>(newUser);
 
+            var result = postgreSqlContext.Users.FirstOrDefault(u => u.Email == newUser.Email);
+
+            if (result !=null)
+                throw new Exception("user is exist");
+
             postgreSqlContext.Users.Add(user);
             await postgreSqlContext.SaveChangesAsync();
 

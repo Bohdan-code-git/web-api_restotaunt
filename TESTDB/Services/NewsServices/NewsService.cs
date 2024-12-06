@@ -15,16 +15,16 @@ namespace TESTDB.Services.NewsServices
 
         public async Task<List<News?>> GetItems()
         {
-            var items = await postgreSqlContext.News.Include(x => x.type).ToListAsync();
+            var items = await postgreSqlContext.News.Include(x => x.Type).ToListAsync();
             return items;
         }
         public async Task<List<News?>> GetItemsByNewsType(string typename)
         {
-            var items = await postgreSqlContext.News.Include(i => i.type).ToListAsync();
+            var items = await postgreSqlContext.News.Include(i => i.Type).ToListAsync();
             List<News> result = new List<News>();
             foreach (var item in items)
             {
-                if (item.type.name == typename)
+                if (item.Type.Name == typename)
                 {
                     result.Add(item);
                 }

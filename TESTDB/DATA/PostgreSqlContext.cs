@@ -44,6 +44,8 @@ namespace TESTDB.DATA
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Type> Types { get; set; }
         public DbSet<News> News { get; set; }
+        public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<OrderItem> OrderItems { get; set; } = null!;
         public DbSet<NewsType> NewsTypes { get; set; }
         public DbSet<User> Users { get; set; }
     }

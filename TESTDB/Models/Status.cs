@@ -3,6 +3,6 @@
     public class Status : BaseEntity
     {
         public string status {get;set;}
-        public string description { get; set; }
+        public string Description { get; set; }
     }
 }
