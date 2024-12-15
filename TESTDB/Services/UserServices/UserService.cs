@@ -78,7 +78,7 @@ namespace TESTDB.Services.UserServices
 
             var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(1),
+                    expires: DateTime.Now.AddSeconds(15),
                     signingCredentials: creds
                 );
 
@@ -91,7 +91,8 @@ namespace TESTDB.Services.UserServices
         {
             if (_httpContextAccessor.HttpContext is not null)
             {
-                var result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                
+               var result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
 
                 var user = postgreSqlContext.Users.FirstOrDefault(u => u.Email == result);
 

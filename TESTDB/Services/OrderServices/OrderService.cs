@@ -23,12 +23,15 @@ namespace TESTDB.Services.OrderServices
             Order newOrder = new Order();
             newOrder.TotalPrice = order.TotalPrice;
             newOrder.User = user;
+            newOrder.UserId = user.Id;
+            newOrder.State= State.New;
+            newOrder.Adress = order.Adress;
 
             postgreSqlContext.Orders.Add(newOrder);
 
             foreach (OrderItem item in order.OrderItems)
             {
-                var dish = postgreSqlContext.Items.Find(item?.Item?.Id);
+                var dish = postgreSqlContext.Items.Find(item.ItemId);
 
                 OrderItem orderItem = new OrderItem();
                 orderItem.Quantity = item.Quantity;

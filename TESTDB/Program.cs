@@ -9,6 +9,7 @@ using BCrypt.Net;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Builder;
 using Swashbuckle.AspNetCore.Filters;
+using TESTDB.Services.OrderServices;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -34,16 +35,17 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()  // Разрешить все источники
-              .AllowAnyMethod()  // Разрешить все HTTP методы
-              .AllowAnyHeader(); // Разрешить все заголовки
+            policy.WithOrigins("http://localhost:3000")
+            .AllowAnyMethod()  // Разрешить все HTTP методы
+            .AllowCredentials()
+            .AllowAnyHeader(); // Разрешить все заголовки
     });
 });
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
 builder.Services.AddScoped<IItemservices, ItemServices>();
 builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddAuthentication().AddJwtBearer(options =>
 {

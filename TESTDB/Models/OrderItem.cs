@@ -1,4 +1,6 @@
-﻿namespace TESTDB.Models
+﻿using System.Text.Json.Serialization;
+
+namespace TESTDB.Models
 {
     public class OrderItem
     {
@@ -9,6 +11,7 @@
         public Item? Item { get; set; }
 
         public int OrderId { get; set; }
+        [JsonIgnore]
         public Order? Order { get; set; }
 
     }

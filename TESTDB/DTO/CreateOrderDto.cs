@@ -6,5 +6,6 @@ namespace WebApplication1.Dtos
     {
         public decimal TotalPrice { get; set; }
         public List<OrderItem> OrderItems { get; set; }
+        public string Adress { get; set; }
     }
 }
