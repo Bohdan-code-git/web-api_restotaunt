@@ -5,7 +5,7 @@ namespace TESTDB.Services.OrderServices
 {
     public interface IOrderService
     {
-       Task CreateOrder(CreateOrderDto order, int id);
+       Task CreateOrder(CreateOrderDto order);
        Task<List<Order?>> GetOrders();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -55,7 +56,7 @@ namespace TESTDB.Services.UserServices
             var result = postgreSqlContext.Users.FirstOrDefault(u => u.Email == newUser.Email);
 
             if (result !=null)
-                throw new Exception("user is exist");
+                throw new Exception("user already exist");
 
             postgreSqlContext.Users.Add(user);
             await postgreSqlContext.SaveChangesAsync();
@@ -78,7 +79,7 @@ namespace TESTDB.Services.UserServices
 
             var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddSeconds(15),
+                    expires: DateTime.Now.AddSeconds(20),
                     signingCredentials: creds
                 );
 
@@ -91,10 +92,15 @@ namespace TESTDB.Services.UserServices
         {
             if (_httpContextAccessor.HttpContext is not null)
             {
+                if (!_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return null;
+                }
                 
-               var result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                var result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
 
                 var user = postgreSqlContext.Users.FirstOrDefault(u => u.Email == result);
+                
 
                 if (user == null)
                     return null;

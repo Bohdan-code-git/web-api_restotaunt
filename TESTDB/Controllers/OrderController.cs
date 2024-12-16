@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TESTDB.Models;
 using TESTDB.Services.ItemServices;
@@ -17,10 +18,10 @@ namespace TESTDB.Controllers
             orderService = service;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> AddOrder(CreateOrderDto order, int id)
+        [HttpPost, Authorize]
+        public async Task<ActionResult> AddOrder(CreateOrderDto order)
         {
-            await orderService.CreateOrder(order, id);
+            await orderService.CreateOrder(order);
             return Ok();
         }
         [HttpGet]
