@@ -16,7 +16,7 @@ namespace TESTDB.Controllers
             _userService = userService;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize] 
         public async Task<ActionResult<GetUserDto>> GetUserInfo()
         {
             var result = await _userService.GetUserInfo();

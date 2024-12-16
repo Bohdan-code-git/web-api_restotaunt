@@ -52,9 +52,14 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         
+
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateIssuerSigningKey = true,
-        ValidateAudience = false,
-        ValidateIssuer = false, 
+        ValidateLifetime = true, // ѕроверка истечени€ срока действи€ токена
+        ClockSkew = TimeSpan.Zero, // ”станавливаем нулевую погрешность времени
+        ValidIssuer = builder.Configuration.GetSection("JWT:Issuer").Value,
+        ValidAudience = builder.Configuration.GetSection("JWT:Audience").Value,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT:Token").Value!))
     };
 });

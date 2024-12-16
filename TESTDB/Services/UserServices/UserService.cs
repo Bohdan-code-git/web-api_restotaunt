@@ -79,8 +79,10 @@ namespace TESTDB.Services.UserServices
 
             var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddSeconds(20),
-                    signingCredentials: creds
+                    expires: DateTime.Now.AddSeconds(100),
+                    signingCredentials: creds,
+                    issuer: _configuration["JWT:Issuer"],
+                    audience: _configuration["JWT:Audience"]
                 );
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
