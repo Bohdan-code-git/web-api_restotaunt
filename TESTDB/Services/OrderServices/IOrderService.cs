@@ -7,5 +7,6 @@ namespace TESTDB.Services.OrderServices
     {
        Task CreateOrder(CreateOrderDto order);
        Task<List<Order?>> GetOrders();
+       Task<List<Order?>> GetUserOrders();
     }
 }

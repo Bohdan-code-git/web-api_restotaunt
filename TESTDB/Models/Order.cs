@@ -1,4 +1,6 @@
-﻿namespace TESTDB.Models
+﻿using System.Text.Json.Serialization;
+
+namespace TESTDB.Models
 {
     public class Order : BaseEntity
     {
@@ -6,6 +8,7 @@
         public decimal TotalPrice { get; set; }
         public string? Adress { get; set; } 
         public int UserId { get; set; }
+        [JsonIgnore]
         public User? User { get; set; }
 
         public List<OrderItem>? OrderItems { get; set; } = new();

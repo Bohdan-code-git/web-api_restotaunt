@@ -24,10 +24,17 @@ namespace TESTDB.Controllers
             await orderService.CreateOrder(order);
             return Ok();
         }
-        [HttpGet]
-        public async Task<ActionResult<List<Order>>> GetAsync()
+        //[HttpGet]
+        //public async Task<ActionResult<List<Order>>> GetAsync()
+        //{
+        //    var result = await orderService.GetOrders();
+        //    return Ok(result);
+        //}
+
+        [HttpGet, Authorize]
+        public async Task<ActionResult<List<Order>>> GetOrderByAuthorizedUser()
         {
-            var result = await orderService.GetOrders();
+            var result = await orderService.GetUserOrders();
             return Ok(result);
         }
     }
