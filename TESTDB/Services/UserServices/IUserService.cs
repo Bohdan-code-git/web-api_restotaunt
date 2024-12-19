@@ -8,5 +8,11 @@ namespace TESTDB.Services.UserServices
         Task<string> Login(AddUserDto user);
         Task<GetUserDto> GetUserInfo();
         Task<GetUserDto?> GetUserDetails(int id);
+        Task<string> ChangePassword(ChangePasswordDto user);
+
+        //Task<string> ChangeEmail(string email);
+        Task<string> ChangeName(string name);
+        Task<string> ChangePhone(string phone);
+
     }
 }

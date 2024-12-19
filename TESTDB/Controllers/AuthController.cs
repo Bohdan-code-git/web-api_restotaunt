@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TESTDB.DTO;
 using TESTDB.Services.UserServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TESTDB.Controllers
 {
@@ -48,6 +49,21 @@ namespace TESTDB.Controllers
             }
 
         }
+        [HttpPost("ChangePassword"), Authorize]
+        public async Task<ActionResult<TokenDto>> Login(ChangePasswordDto user)
+        {
+            try
+            {
+                var result = await _userService.ChangePassword(user);
+                TokenDto tokenDto = new TokenDto();
+                tokenDto.Token = result;
+                return Ok(tokenDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
+        }
     }
 }

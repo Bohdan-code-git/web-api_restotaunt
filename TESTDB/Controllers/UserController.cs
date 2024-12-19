@@ -16,7 +16,7 @@ namespace TESTDB.Controllers
             _userService = userService;
         }
 
-        [HttpGet, Authorize] 
+        [HttpGet, Authorize]
         public async Task<ActionResult<GetUserDto>> GetUserInfo()
         {
             var result = await _userService.GetUserInfo();
@@ -29,6 +29,18 @@ namespace TESTDB.Controllers
             var result = await _userService.GetUserDetails(id);
             return Ok(result);
         }
+        [HttpPost("ChangeName"), Authorize]
+        public async Task<ActionResult<string>> ChangeName(string Name)
+        {
+            var result = await _userService.ChangeName(Name);
+            return Ok(result);
+        }
 
+        [HttpPost("ChangePhone"), Authorize]
+        public async Task<ActionResult<string>> ChangePhone(string Phone)
+        {
+            var result = await _userService.ChangePhone(Phone);
+            return Ok(result);
+        }
     }
 }

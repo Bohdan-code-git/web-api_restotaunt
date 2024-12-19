@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using TESTDB.DATA;
 using TESTDB.DTO;
 using TESTDB.Models;
@@ -121,7 +122,106 @@ namespace TESTDB.Services.UserServices
 
             return mapper.Map<GetUserDto>(user);
         }
+        public async Task<string> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            // Найти пользователя по email
+            var user = postgreSqlContext.Users.FirstOrDefault(u => u.Email == changePasswordDto.Email);
+            var result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            if (user == null)
+                throw new Exception("User not found");
 
+            if (user.Email == result)
+                throw new Exception("User is not yours");
+
+            // Проверить текущий пароль
+            if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.CurrentPassword, user.Password))
+                throw new Exception("Current password is incorrect");
+
+            // Хэшировать новый пароль
+            string newPasswordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
+
+            // Обновить пароль пользователя
+            user.Password = newPasswordHash;
+            postgreSqlContext.Users.Update(user);
+            await postgreSqlContext.SaveChangesAsync();
+
+            // Сгенерировать новый токен
+            string token = CreateToken(user);
+
+            return token;
+        }
+
+        //public async Task<string> ChangeEmail(string email)
+        //{
+        //    // Получить текущего пользователя (например, через токен или другой метод аутентификации)
+        //    var user = GetUserInfo();
+        //    if (user == null)
+        //        throw new Exception("User not found");
+
+        //    // Проверить, не используется ли email другим пользователем
+        //    var existingUser = postgreSqlContext.Users.FirstOrDefault(u => u.Email == email);
+        //    if (existingUser != null)
+        //        throw new Exception("Email is already in use");
+
+
+        //    User newuser = new();
+        //    newuser.Email = email;
+        //    newuser.Password=
+        //    existingUser.Email = email;
+        //    postgreSqlContext.Users.Update(existingUser);
+        //    await postgreSqlContext.SaveChangesAsync();
+
+        //    // Сгенерировать новый токен
+        //    string token = CreateToken(existingUser);
+
+        //    return token;
+        //}
+
+        public async Task<string> ChangeName(string name)
+        {
+            // Получить текущего пользователя
+            var user = GetUserInfo();
+            if (user == null)
+                throw new Exception("User not found");
+            var existingUser = postgreSqlContext.Users.FirstOrDefault(u => u.Email == user.Result.Email);
+            if (existingUser == null)
+                throw new Exception("Email is already in use");
+
+            // Обновить имя
+            existingUser.UserName = name;
+            postgreSqlContext.Users.Update(existingUser);
+            await postgreSqlContext.SaveChangesAsync();
+
+            // Сгенерировать новый токен
+            string token = CreateToken(existingUser);
+
+            return token;
+        }
+
+        public async Task<string> ChangePhone(string phone)
+        {
+            // Получить текущего пользователя
+            var user = GetUserInfo();
+            if (user == null)
+                throw new Exception("User not found");
+
+            var existingUser = postgreSqlContext.Users.FirstOrDefault(u => u.Email == user.Result.Email);
+            if (existingUser == null)
+                throw new Exception("Email is already in use");
+
+            if (!Regex.IsMatch(phone, @"^\+?[1-9]\d{1,14}$"))
+                throw new Exception("Invalid phone number format");
+
+            // Обновить номер телефона
+            existingUser.PhoneNumber = phone;
+            postgreSqlContext.Users.Update(existingUser);
+            await postgreSqlContext.SaveChangesAsync();
+
+            // Сгенерировать новый токен
+            string token = CreateToken(existingUser);
+
+            return token;
+        }
 
     }
 }
