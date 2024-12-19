@@ -22,7 +22,7 @@ namespace TESTDB.Controllers
             var result = await itemservices.GetItems();
             return Ok(result);
         }
-        [HttpGet("{NameOfDish}")]
+        [HttpGet("{TypeNameOfDish}")]
         public async Task<ActionResult<Item>> GetItemsByDishType(string TypeNameOfDish)
         {
             var result = await itemservices.GetItemsByDishType(TypeNameOfDish);
