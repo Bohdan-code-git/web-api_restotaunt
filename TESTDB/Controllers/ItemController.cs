@@ -23,9 +23,9 @@ namespace TESTDB.Controllers
             return Ok(result);
         }
         [HttpGet("{NameOfDish}")]
-        public async Task<ActionResult<Item>> GetItemsByDishType(string NameOfDish)
+        public async Task<ActionResult<Item>> GetItemsByDishType(string TypeNameOfDish)
         {
-            var result = await itemservices.GetItemsByDishType(NameOfDish);
+            var result = await itemservices.GetItemsByDishType(TypeNameOfDish);
 
             if (result is [])
                 return NotFound("no dishes");
