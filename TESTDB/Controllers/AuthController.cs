@@ -50,7 +50,7 @@ namespace TESTDB.Controllers
 
         }
         [HttpPost("ChangePassword"), Authorize]
-        public async Task<ActionResult<TokenDto>> Login(ChangePasswordDto user)
+        public async Task<ActionResult<TokenDto>> Change(ChangePasswordDto user)
         {
             try
             {

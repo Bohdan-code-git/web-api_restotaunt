@@ -130,8 +130,8 @@ namespace TESTDB.Services.UserServices
             if (user == null)
                 throw new Exception("User not found");
 
-            if (user.Email == result)
-                throw new Exception("User is not yours");
+            //if (user.Email == result)
+            //    throw new Exception("User is not yours");
 
             // Проверить текущий пароль
             if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.CurrentPassword, user.Password))
