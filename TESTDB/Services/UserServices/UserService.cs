@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BCrypt.Net;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -122,6 +123,40 @@ namespace TESTDB.Services.UserServices
 
             return mapper.Map<GetUserDto>(user);
         }
+        public async Task<string> UpdateUserCredentialsAsync(GetUserDto updateUser)
+        {
+            if (_httpContextAccessor.HttpContext is null)
+            {
+                return "Bad request: HttpContext is null.";
+            }
+
+            var userEmail = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return "Bad request: User email not found in claims.";
+            }
+
+            var user = await postgreSqlContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            if (user is null)
+            {
+                return "Bad request: User not found.";
+            }
+
+            user.Adress = !string.IsNullOrEmpty(updateUser.Adress) ? updateUser.Adress : user.Adress;
+
+            user.UserName = !string.IsNullOrEmpty(updateUser.Name) ? updateUser.Name : user.UserName;
+
+            user.PhoneNumber = !string.IsNullOrEmpty(updateUser.PhoneNumber) ? updateUser.PhoneNumber : user.PhoneNumber;
+
+            user.Email = !string.IsNullOrEmpty(updateUser.Email) ? updateUser.Email : user.Email;
+
+            postgreSqlContext.Users.Update(user);
+            await postgreSqlContext.SaveChangesAsync();
+
+            string token = CreateToken(user);
+
+            return token;
+        }
         public async Task<string> ChangePassword(ChangePasswordDto changePasswordDto)
         {
             // Найти пользователя по email
@@ -130,22 +165,18 @@ namespace TESTDB.Services.UserServices
             if (user == null)
                 throw new Exception("User not found");
 
-            //if (user.Email == result)
-            //    throw new Exception("User is not yours");
+            //if (user.Email != result)
+            //    throw new Exception("User is not yours"); сложную логику проработать
 
-            // Проверить текущий пароль
             if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.CurrentPassword, user.Password))
                 throw new Exception("Current password is incorrect");
 
-            // Хэшировать новый пароль
             string newPasswordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
 
-            // Обновить пароль пользователя
             user.Password = newPasswordHash;
             postgreSqlContext.Users.Update(user);
             await postgreSqlContext.SaveChangesAsync();
 
-            // Сгенерировать новый токен
             string token = CreateToken(user);
 
             return token;
@@ -200,7 +231,6 @@ namespace TESTDB.Services.UserServices
 
         public async Task<string> ChangePhone(string phone)
         {
-            // Получить текущего пользователя
             var user = GetUserInfo();
             if (user == null)
                 throw new Exception("User not found");
@@ -212,12 +242,11 @@ namespace TESTDB.Services.UserServices
             if (!Regex.IsMatch(phone, @"^\+?[1-9]\d{1,14}$"))
                 throw new Exception("Invalid phone number format");
 
-            // Обновить номер телефона
+
             existingUser.PhoneNumber = phone;
             postgreSqlContext.Users.Update(existingUser);
             await postgreSqlContext.SaveChangesAsync();
 
-            // Сгенерировать новый токен
             string token = CreateToken(existingUser);
 
             return token;

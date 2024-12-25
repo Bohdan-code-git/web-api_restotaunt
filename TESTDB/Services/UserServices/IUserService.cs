@@ -13,6 +13,7 @@ namespace TESTDB.Services.UserServices
         //Task<string> ChangeEmail(string email);
         Task<string> ChangeName(string name);
         Task<string> ChangePhone(string phone);
+        Task<string> UpdateUserCredentialsAsync(GetUserDto updateUser);
 
     }
 }

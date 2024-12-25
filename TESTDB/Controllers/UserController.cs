@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TESTDB.DTO;
+using TESTDB.Models;
 using TESTDB.Services.UserServices;
 
 namespace TESTDB.Controllers
@@ -41,6 +42,22 @@ namespace TESTDB.Controllers
         {
             var result = await _userService.ChangePhone(Phone);
             return Ok(result);
+        }
+
+        [HttpPost("patch"), Authorize]
+        public async Task<ActionResult<TokenDto>> Patch(GetUserDto dto)
+        {
+            try
+            {
+                var result = await _userService.UpdateUserCredentialsAsync(dto);
+                TokenDto tokenDto = new TokenDto();
+                tokenDto.Token = result;
+                return Ok(tokenDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
