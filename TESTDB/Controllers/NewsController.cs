@@ -2,7 +2,6 @@
 using TESTDB.Models;
 using TESTDB.Services.NewsServices;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TESTDB.Controllers
 {
@@ -16,7 +15,6 @@ namespace TESTDB.Controllers
             this.INewsService = iNewsService;
         }
 
-        // GET: api/<ValuesController>
         [HttpGet]
         public async Task<ActionResult<List<News>>> GetAsync()
         {
@@ -38,20 +36,5 @@ namespace TESTDB.Controllers
             }
             return Ok(result);
         }
-
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
-
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }

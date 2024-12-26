@@ -36,9 +36,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy =>
     {
             policy.WithOrigins("http://localhost:3000")
-            .AllowAnyMethod()  // Разрешить все HTTP методы
+            .AllowAnyMethod()  
             .AllowCredentials()
-            .AllowAnyHeader(); // Разрешить все заголовки
+            .AllowAnyHeader(); 
     });
 });
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
@@ -56,8 +56,8 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateIssuerSigningKey = true,
-        ValidateLifetime = true, // Проверка истечения срока действия токена
-        ClockSkew = TimeSpan.Zero, // Устанавливаем нулевую погрешность времени
+        ValidateLifetime = true, 
+        ClockSkew = TimeSpan.Zero,
         ValidIssuer = builder.Configuration.GetSection("JWT:Issuer").Value,
         ValidAudience = builder.Configuration.GetSection("JWT:Audience").Value,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT:Token").Value!))

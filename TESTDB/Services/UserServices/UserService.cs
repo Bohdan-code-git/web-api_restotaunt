@@ -105,7 +105,6 @@ namespace TESTDB.Services.UserServices
 
                 var user = postgreSqlContext.Users.FirstOrDefault(u => u.Email == result);
                 
-
                 if (user == null)
                     return null;
 
@@ -144,7 +143,7 @@ namespace TESTDB.Services.UserServices
 
             user.Adress = !string.IsNullOrEmpty(updateUser.Adress) ? updateUser.Adress : user.Adress;
 
-            user.UserName = !string.IsNullOrEmpty(updateUser.Name) ? updateUser.Name : user.UserName;
+            user.UserName = !string.IsNullOrEmpty(updateUser.UserName) ? updateUser.UserName : user.UserName;
 
             user.PhoneNumber = !string.IsNullOrEmpty(updateUser.PhoneNumber) ? updateUser.PhoneNumber : user.PhoneNumber;
 
@@ -182,35 +181,8 @@ namespace TESTDB.Services.UserServices
             return token;
         }
 
-        //public async Task<string> ChangeEmail(string email)
-        //{
-        //    // Получить текущего пользователя (например, через токен или другой метод аутентификации)
-        //    var user = GetUserInfo();
-        //    if (user == null)
-        //        throw new Exception("User not found");
-
-        //    // Проверить, не используется ли email другим пользователем
-        //    var existingUser = postgreSqlContext.Users.FirstOrDefault(u => u.Email == email);
-        //    if (existingUser != null)
-        //        throw new Exception("Email is already in use");
-
-
-        //    User newuser = new();
-        //    newuser.Email = email;
-        //    newuser.Password=
-        //    existingUser.Email = email;
-        //    postgreSqlContext.Users.Update(existingUser);
-        //    await postgreSqlContext.SaveChangesAsync();
-
-        //    // Сгенерировать новый токен
-        //    string token = CreateToken(existingUser);
-
-        //    return token;
-        //}
-
         public async Task<string> ChangeName(string name)
         {
-            // Получить текущего пользователя
             var user = GetUserInfo();
             if (user == null)
                 throw new Exception("User not found");
@@ -218,12 +190,10 @@ namespace TESTDB.Services.UserServices
             if (existingUser == null)
                 throw new Exception("Email is already in use");
 
-            // Обновить имя
             existingUser.UserName = name;
             postgreSqlContext.Users.Update(existingUser);
             await postgreSqlContext.SaveChangesAsync();
 
-            // Сгенерировать новый токен
             string token = CreateToken(existingUser);
 
             return token;
